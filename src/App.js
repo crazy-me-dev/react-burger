@@ -1,8 +1,14 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component, Fragment } from 'react';
+import Layout from './components/Layout/Layout';
 
-function App() {
-  return <div className='App'></div>;
+class App extends Component {
+  render() {
+    return (
+      <Layout>
+        <div></div>
+      </Layout>
+    );
+  }
 }
 
 export default App;
