@@ -4,7 +4,7 @@ import BuildControl from './BuildControl/BuildControl';
 
 const controls = [
   // type casing matches switch statement in BurgerIngredients.js
-  { label: 'Salad', type: 'salad' },
+  { label: 'Lettuce', type: 'lettuce' },
   { label: 'Bacon', type: 'bacon' },
   { label: 'Cheese', type: 'cheese' },
   { label: 'Meat', type: 'meat' }
@@ -13,7 +13,13 @@ const controls = [
 const BuildControls = props => (
   <div className={classes.BuildControls}>
     {controls.map(ctrl => (
-      <BuildControl key={ctrl.label} label={ctrl.label} />
+      <BuildControl
+        key={ctrl.label}
+        label={ctrl.label}
+        added={() => props.ingredientAdded(ctrl.type)}
+        removed={() => props.ingredientRemoved(ctrl.type)}
+        disabled={props.disabled[ctrl.type]}
+      />
     ))}
   </div>
 );
