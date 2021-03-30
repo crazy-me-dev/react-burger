@@ -26,6 +26,7 @@ class BurgerBuilder extends Component {
   };
 
   componentDidMount() {
+    console.log(this.props);
     axios
       .get(
         'https://burger-builder-bafec-default-rtdb.firebaseio.com/ingredients.json'
@@ -92,31 +93,19 @@ class BurgerBuilder extends Component {
   };
 
   purchaseContinueHandler = () => {
-    this.setState({ loading: true });
-    const order = {
-      ingredients: this.state.ingredients,
-      // price would be checked on server to stop manipulation
-      price: this.state.totalPrice,
-      customer: {
-        name: 'Kyle',
-        address: {
-          street: '123 Test Street',
-          city: 'Nowhere',
-          zipCode: '98777'
-        },
-        email: 'test@test.com',
-        phone: 555555555
-      },
-      deliveryMethod: 'UberEats'
-    };
-    axios
-      .post('/orders.json', order)
-      .then(response => {
-        this.setState({ loading: false, purchasing: false });
-      })
-      .catch(error => {
-        this.setState({ loading: false, purchasing: false });
-      });
+    const queryParams = [];
+    for (let i in this.state.ingredients) {
+      queryParams.push(
+        encodeURIComponent(i) +
+          '=' +
+          encodeURIComponent(this.state.ingredients[i])
+      );
+    }
+    const queryString = queryParams.join('&');
+    this.props.history.push({
+      pathname: '/checkout',
+      search: '?' + queryString
+    });
   };
 
   render() {
