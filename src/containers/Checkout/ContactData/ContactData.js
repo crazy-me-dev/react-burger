@@ -12,49 +12,63 @@ class ContactData extends Component {
         elementType: 'input',
         elementConfig: {
           type: 'text',
-          placeholder: 'Name'
+          placeholder: 'Name',
+          required: true
         },
-        value: ''
+        value: '',
+        valid: false
       },
       street: {
         elementType: 'input',
         elementConfig: {
           type: 'text',
-          placeholder: 'Street'
+          placeholder: 'Street',
+          required: true
         },
-        value: ''
+        value: '',
+        valid: false
       },
       city: {
         elementType: 'input',
         elementConfig: {
           type: 'text',
-          placeholder: 'City'
+          placeholder: 'City',
+          required: true
         },
-        value: ''
+        value: '',
+        valid: false
       },
       zipCode: {
         elementType: 'input',
         elementConfig: {
           type: 'text',
-          placeholder: 'Zip Code'
+          placeholder: 'Zip Code',
+          minLength: '5',
+          maxLength: '5',
+          required: true
         },
-        value: ''
+        value: '',
+        valid: false
       },
       email: {
         elementType: 'input',
         elementConfig: {
           type: 'email',
-          placeholder: 'Email'
+          placeholder: 'Email',
+          required: true
         },
-        value: ''
+        value: '',
+        valid: false
       },
       phone: {
         elementType: 'input',
         elementConfig: {
-          type: 'text',
-          placeholder: 'Phone Number'
+          type: 'tel',
+          placeholder: 'Phone Number',
+          required: true
         },
-        value: ''
+        value: '',
+        valid: false
       },
       deliveryMethod: {
         elementType: 'select',
@@ -65,20 +79,45 @@ class ContactData extends Component {
             { value: 'take-out', displayValue: 'Take Out' }
           ]
         },
-        value: ''
+        value: 'dine-in',
+        valid: true
       }
     },
     loading: false
   };
 
+  checkValidity(value, rules) {
+    let isValid = true;
+    if (!rules) {
+      return true;
+    }
+    if (rules.valid) {
+      // isValid changes to true or false depending on empty string
+      isValid = value.trim() !== '';
+    }
+    if (rules.minLength) {
+      isValid = value.length >= rules.minLength;
+    }
+    if (rules.maxLength) {
+      isValid = value.length <= rules.maxLength;
+    }
+    return isValid;
+  }
+
   orderHandler = event => {
     // stops the page from reloading
     event.preventDefault();
     this.setState({ loading: true });
+    const formData = {};
+    for (let formElementId in this.state.orderForm) {
+      // extract key value pair from state
+      formData[formElementId] = this.state.orderForm[formElementId].value;
+    }
     const order = {
       ingredients: this.props.ingredients,
       // price would be checked on server to stop manipulation
-      price: this.props.price
+      price: this.props.price,
+      orderData: formData
     };
     axios
       .post('/orders.json', order)
@@ -98,6 +137,10 @@ class ContactData extends Component {
     const updatedFormNestedElements = { ...updatedOrderForm[inputId] };
     // assigning the user input to the nest elements value
     updatedFormNestedElements.value = event.target.value;
+    // changing valid to true
+    updatedFormNestedElements.valid = this.checkValidity(
+      updatedFormNestedElements.value
+    );
     // copying values to order form
     updatedOrderForm[inputId] = updatedFormNestedElements;
     // updating state with order form
@@ -114,7 +157,7 @@ class ContactData extends Component {
     }
 
     let form = (
-      <form>
+      <form onSubmit={this.orderHandler}>
         {formElementsArray.map(formElement => (
           <Input
             key={formElement.id}
@@ -124,9 +167,7 @@ class ContactData extends Component {
             changed={event => this.inputChangedHandler(event, formElement.id)}
           />
         ))}
-        <Button btnType='Success' clicked={this.orderHandler}>
-          ORDER
-        </Button>
+        <Button btnType='Success'>ORDER</Button>
       </form>
     );
     if (this.state.loading) {
