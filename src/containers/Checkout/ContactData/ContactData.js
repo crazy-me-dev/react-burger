@@ -16,7 +16,8 @@ class ContactData extends Component {
           required: true
         },
         value: '',
-        valid: false
+        valid: false,
+        touched: false
       },
       street: {
         elementType: 'input',
@@ -26,7 +27,8 @@ class ContactData extends Component {
           required: true
         },
         value: '',
-        valid: false
+        valid: false,
+        touched: false
       },
       city: {
         elementType: 'input',
@@ -36,7 +38,8 @@ class ContactData extends Component {
           required: true
         },
         value: '',
-        valid: false
+        valid: false,
+        touched: false
       },
       zipCode: {
         elementType: 'input',
@@ -45,30 +48,37 @@ class ContactData extends Component {
           placeholder: 'Zip Code',
           minLength: '5',
           maxLength: '5',
-          required: true
+          required: true,
+          isNumeric: true
         },
         value: '',
-        valid: false
+        valid: false,
+        touched: false
       },
       email: {
         elementType: 'input',
         elementConfig: {
           type: 'email',
           placeholder: 'Email',
-          required: true
+          required: true,
+          isEmail: true
         },
         value: '',
-        valid: false
+        valid: false,
+        touched: false
       },
       phone: {
         elementType: 'input',
         elementConfig: {
           type: 'tel',
           placeholder: 'Phone Number',
-          required: true
+          required: true,
+          maxLength: '10',
+          isNumeric: true
         },
         value: '',
-        valid: false
+        valid: false,
+        touched: false
       },
       deliveryMethod: {
         elementType: 'select',
@@ -83,26 +93,9 @@ class ContactData extends Component {
         valid: true
       }
     },
+    formIsValid: false,
     loading: false
   };
-
-  checkValidity(value, rules) {
-    let isValid = true;
-    if (!rules) {
-      return true;
-    }
-    if (rules.valid) {
-      // isValid changes to true or false depending on empty string
-      isValid = value.trim() !== '';
-    }
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength;
-    }
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength;
-    }
-    return isValid;
-  }
 
   orderHandler = event => {
     // stops the page from reloading
@@ -130,6 +123,33 @@ class ContactData extends Component {
       });
   };
 
+  checkValidity(value, rules) {
+    let isValid = true;
+    if (!rules) {
+      return true;
+    }
+    if (rules.valid) {
+      // isValid changes to true or false depending on empty string
+      isValid = value.trim() !== '' && isValid;
+    }
+    if (rules.minLength) {
+      isValid = value.length >= rules.minLength && isValid;
+    }
+    if (rules.maxLength) {
+      isValid = value.length <= rules.maxLength && isValid;
+    }
+
+    if (rules.isEmail) {
+      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
+      isValid = pattern.test(value) && isValid;
+    }
+    if (rules.isNumeric) {
+      const pattern = /^\d+$/;
+      isValid = pattern.test(value) && isValid;
+    }
+    return isValid;
+  }
+
   inputChangedHandler = (event, inputId) => {
     // copying state
     const updatedOrderForm = { ...this.state.orderForm };
@@ -139,12 +159,21 @@ class ContactData extends Component {
     updatedFormNestedElements.value = event.target.value;
     // changing valid to true
     updatedFormNestedElements.valid = this.checkValidity(
-      updatedFormNestedElements.value
+      updatedFormNestedElements.value,
+      updatedOrderForm.required
     );
+    // changing input background color
+    updatedFormNestedElements.touched = true;
     // copying values to order form
     updatedOrderForm[inputId] = updatedFormNestedElements;
+
+    let formIsValid = true;
+    for (let inputId in updatedOrderForm) {
+      formIsValid = updatedOrderForm[inputId].valid && formIsValid;
+    }
+
     // updating state with order form
-    this.setState({ orderForm: updatedOrderForm });
+    this.setState({ orderForm: updatedOrderForm, formIsValid: formIsValid });
   };
 
   render() {
@@ -164,10 +193,14 @@ class ContactData extends Component {
             elementType={formElement.config.elementType}
             elementConfig={formElement.config.elementConfig}
             value={formElement.config.value}
+            invalid={!formElement.config.valid}
+            touched={formElement.config.touched}
             changed={event => this.inputChangedHandler(event, formElement.id)}
           />
         ))}
-        <Button btnType='Success'>ORDER</Button>
+        <Button btnType='Success' disabled={!this.state.formIsValid}>
+          ORDER
+        </Button>
       </form>
     );
     if (this.state.loading) {
