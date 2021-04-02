@@ -51,7 +51,7 @@ class ContactData extends Component {
       phone: {
         elementType: 'input',
         elementConfig: {
-          type: 'number',
+          type: 'text',
           placeholder: 'Phone Number'
         },
         value: ''
@@ -91,6 +91,19 @@ class ContactData extends Component {
       });
   };
 
+  inputChangedHandler = (event, inputId) => {
+    // copying state
+    const updatedOrderForm = { ...this.state.orderForm };
+    // copy state with nested elements accessible
+    const updatedFormNestedElements = { ...updatedOrderForm[inputId] };
+    // assigning the user input to the nest elements value
+    updatedFormNestedElements.value = event.target.value;
+    // copying values to order form
+    updatedOrderForm[inputId] = updatedFormNestedElements;
+    // updating state with order form
+    this.setState({ orderForm: updatedOrderForm });
+  };
+
   render() {
     const formElementsArray = [];
     for (let key in this.state.orderForm) {
@@ -108,6 +121,7 @@ class ContactData extends Component {
             elementType={formElement.config.elementType}
             elementConfig={formElement.config.elementConfig}
             value={formElement.config.value}
+            changed={event => this.inputChangedHandler(event, formElement.id)}
           />
         ))}
         <Button btnType='Success' clicked={this.orderHandler}>
