@@ -7,14 +7,66 @@ import Input from '../../../components/UI/Input/Input';
 
 class ContactData extends Component {
   state = {
-    name: '',
-    email: '',
-    phone: '',
-    address: {
-      street: '',
-      city: '',
-      state: '',
-      zipcode: ''
+    orderForm: {
+      name: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'Name'
+        },
+        value: ''
+      },
+      street: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'Street'
+        },
+        value: ''
+      },
+      city: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'City'
+        },
+        value: ''
+      },
+      zipCode: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'text',
+          placeholder: 'Zip Code'
+        },
+        value: ''
+      },
+      email: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'email',
+          placeholder: 'Email'
+        },
+        value: ''
+      },
+      phone: {
+        elementType: 'input',
+        elementConfig: {
+          type: 'number',
+          placeholder: 'Phone Number'
+        },
+        value: ''
+      },
+      deliveryMethod: {
+        elementType: 'select',
+        elementConfig: {
+          options: [
+            { value: 'dine-in', displayValue: 'Dine-In' },
+            { value: 'delivery', displayValue: 'Delivery' },
+            { value: 'take-out', displayValue: 'Take Out' }
+          ]
+        },
+        value: ''
+      }
     },
     loading: false
   };
@@ -26,18 +78,7 @@ class ContactData extends Component {
     const order = {
       ingredients: this.props.ingredients,
       // price would be checked on server to stop manipulation
-      price: this.props.price,
-      customer: {
-        name: this.state.name,
-        address: {
-          street: 'jlkj',
-          city: 'Nowhere',
-          zipCode: '98777'
-        },
-        email: 'test@test.com',
-        phone: 555555555
-      },
-      deliveryMethod: 'UberEats'
+      price: this.props.price
     };
     axios
       .post('/orders.json', order)
@@ -53,12 +94,7 @@ class ContactData extends Component {
   render() {
     let form = (
       <form>
-        <Input
-          inputType='input'
-          type='email'
-          name='email'
-          placeholder='Your Email'
-        />
+        <Input elementType='...' elementConfig='...' value='...' />
         <Input
           inputType='input'
           type='text'
