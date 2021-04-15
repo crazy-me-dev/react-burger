@@ -2,13 +2,9 @@ import * as actionTypes from '../actions/actionTypes';
 
 const initialState = {
   // will update later to grab from server asynchronously
-  ingredients: {
-    lettuce: 0,
-    bacon: 0,
-    cheese: 0,
-    meat: 0
-  },
-  totalPrice: 5
+  ingredients: null,
+  totalPrice: 5,
+  error: false
 };
 
 const INGREDIENT_PRICES = {
@@ -41,6 +37,23 @@ const reducer = (state = initialState, action) => {
         },
         // update the price
         totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName]
+      };
+    case actionTypes.SET_INGREDIENTS:
+      return {
+        ...state,
+        // defines the order of the ingredients manually because firebase sorts ingredients alphabetically
+        ingredients: {
+          lettuce: action.ingredients.lettuce,
+          bacon: action.ingredients.bacon,
+          cheese: action.ingredients.cheese,
+          meat: action.ingredients.meat
+        },
+        error: false
+      };
+    case actionTypes.FETCH_INGREDIENTS_FAILED:
+      return {
+        ...state,
+        error: true
       };
     default:
       return state;
