@@ -1,4 +1,1 @@
-A React application to build a custom burger
-
-Containers folder are stateful components.
-Components folder are stateless components.
+A React application to that allows you to build and order a custom burger. Created with CSS Modules and Redux for state management with a Firebase database.
