@@ -15,7 +15,6 @@ class Checkout extends Component {
 
   render() {
     let summary = <Redirect to='/' />;
-
     if (this.props.ings) {
       const purchasedRedirect = this.props.purchased ? (
         <Redirect to='/' />
@@ -25,11 +24,11 @@ class Checkout extends Component {
           {purchasedRedirect}
           <CheckoutSummary
             ingredients={this.props.ings}
-            CheckoutCancelled={this.checkoutCancelledHandler}
+            checkoutCancelled={this.checkoutCancelledHandler}
             checkoutContinued={this.checkoutContinuedHandler}
           />
           <Route
-            path={this.props.match.url + '/contact-data'}
+            path={this.props.match.path + '/contact-data'}
             component={ContactData}
           />
         </div>

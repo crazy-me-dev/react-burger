@@ -23,7 +23,7 @@ class Orders extends Component {
         />
       ));
     }
-    return orders;
+    return <div>{orders}</div>;
   }
 }
 

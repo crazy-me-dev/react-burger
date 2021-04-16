@@ -100,7 +100,7 @@ class ContactData extends Component {
   };
 
   orderHandler = event => {
-    // preventDfeault stops the page from reloading
+    // preventDefault stops the page from reloading
     event.preventDefault();
 
     const formData = {};
