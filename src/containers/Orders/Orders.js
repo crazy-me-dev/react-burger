@@ -19,7 +19,7 @@ class Orders extends Component {
           key={order.id}
           ingredients={order.ingredients}
           price={order.price}
-          delivery={order.deliveryMethod}
+          deliveryMethod={order.deliveryMethod}
         />
       ));
     }
@@ -31,6 +31,7 @@ const mapStateToProps = state => {
   return {
     orders: state.order.orders,
     loading: state.order.loading
+
   };
 };
 
