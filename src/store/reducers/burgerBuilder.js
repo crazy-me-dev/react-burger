@@ -5,7 +5,8 @@ const initialState = {
   // will update later to grab from server asynchronously
   ingredients: null,
   totalPrice: 5,
-  error: false
+  error: false,
+  building: false
 };
 
 const INGREDIENT_PRICES = {
@@ -24,7 +25,8 @@ const addIngredient = (state, action) => {
   const updatedState = {
     ingredients: updatedIngredients,
     // update the price
-    totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName]
+    totalPrice: state.totalPrice + INGREDIENT_PRICES[action.ingredientName],
+    building: true
   };
   return updateObject(state, updatedState);
 };
@@ -38,7 +40,8 @@ const removeIngredient = (state, action) => {
   const updatedState = {
     ingredients: updatedIngredients,
     // update the price
-    totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName]
+    totalPrice: state.totalPrice - INGREDIENT_PRICES[action.ingredientName],
+    building: true
   };
   return updateObject(state, updatedState);
 };
@@ -53,7 +56,8 @@ const setIngredients = (state, action) => {
       meat: action.ingredients.meat
     },
     totalPrice: 5,
-    error: false
+    error: false,
+    building: false
   });
 };
 
