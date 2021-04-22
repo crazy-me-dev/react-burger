@@ -34,7 +34,7 @@ const Order = props => {
       <p>
         Price: <strong>${Number.parseFloat(props.price).toFixed(2)} </strong>
       </p>
-      <p>Delivery: {props.deliveryMethod}</p>
+      {/* <p>Delivery: {props.deliveryMethod}</p> */}
     </div>
   );
 };

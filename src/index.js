@@ -12,23 +12,12 @@ import burgerBuilderReducer from './store/reducers/burgerBuilder';
 import orderReducer from './store/reducers/order';
 import authReducer from './store/reducers/auth';
 
-//middleware for logging
-// const logger = store => {
-//   return next => {
-//     return action => {
-//       console.log('[Middleware] Dispatching', action);
-//       const result = next(action);
-//       console.log('[Middleware] next state', store.getState());
-//       return result;
-//     };
-//   };
-// };
-
 // redux dev tools to work with middleware
 const composeEnhancers =
-  (typeof window !== 'undefined' &&
-    window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__) ||
-  compose;
+  process.env.NODE_ENV === 'development'
+    ? typeof window !== 'undefined' &&
+      window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__
+    : null || compose;
 
 const rootReducer = combineReducers({
   burgerBuilder: burgerBuilderReducer,

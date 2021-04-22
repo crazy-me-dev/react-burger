@@ -7,6 +7,7 @@ import Input from '../../../components/UI/Input/Input';
 import { connect } from 'react-redux';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler';
 import * as actions from '../../../store/actions/index';
+import { updateObject, checkValidity } from '../../../shared/utility';
 
 class ContactData extends Component {
   state = {
@@ -118,49 +119,19 @@ class ContactData extends Component {
     this.props.onOrderBurger(order, this.props.token);
   };
 
-  checkValidity(value, rules) {
-    let isValid = true;
-    if (!rules) {
-      return true;
-    }
-    if (rules.valid) {
-      // isValid changes to true or false depending on empty string
-      isValid = value.trim() !== '' && isValid;
-    }
-    if (rules.minLength) {
-      isValid = value.length >= rules.minLength && isValid;
-    }
-    if (rules.maxLength) {
-      isValid = value.length <= rules.maxLength && isValid;
-    }
-
-    if (rules.isEmail) {
-      const pattern = /[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/;
-      isValid = pattern.test(value) && isValid;
-    }
-    if (rules.isNumeric) {
-      const pattern = /^\d+$/;
-      isValid = pattern.test(value) && isValid;
-    }
-    return isValid;
-  }
-
   inputChangedHandler = (event, inputId) => {
-    // copying state
-    const updatedOrderForm = { ...this.state.orderForm };
     // copy state with nested elements accessible
-    const updatedFormNestedElements = { ...updatedOrderForm[inputId] };
-    // assigning the user input to the nest elements value
-    updatedFormNestedElements.value = event.target.value;
-    // changing valid to true
-    updatedFormNestedElements.valid = this.checkValidity(
-      updatedFormNestedElements.value,
-      updatedOrderForm.required
+    const updatedFormNestedElements = updateObject(
+      this.state.orderForm[inputId],
+      {
+        value: event.target.value,
+        valid: checkValidity(event.target.value, this.state.orderForm.required),
+        touched: true
+      }
     );
-    // changing input background color
-    updatedFormNestedElements.touched = true;
-    // copying values to order form
-    updatedOrderForm[inputId] = updatedFormNestedElements;
+    const updatedOrderForm = updateObject(this.state.orderForm, {
+      [inputId]: updatedFormNestedElements
+    });
 
     let formIsValid = true;
     for (let inputId in updatedOrderForm) {
