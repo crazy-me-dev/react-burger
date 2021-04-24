@@ -1,4 +1,4 @@
-Build A Burger is a React application to that allows you to build and order a custom burger.
+Build A Burger is a React application that allows you to build and order a custom burger.
 
 Components are responsive and styled with CSS Modules and state management is handled with Redux leveraging a Firebase database.
 
