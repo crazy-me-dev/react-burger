@@ -7,3 +7,7 @@ User authentication persists using local storage and routes are protected by aut
 Routes are designed with asynchronous "lazy loading" to speed up the application.
 
 Testing handled with Jest and Enzyme.
+
+![Screenshot](https://github.com/devinenoise/burger-builder/blob/main/screenshot1.png)
+
+![Screenshot](https://github.com/devinenoise/burger-builder/blob/main/screenshot2.png)
